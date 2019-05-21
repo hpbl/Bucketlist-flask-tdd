@@ -38,13 +38,14 @@ class BucketlistTestCase(unittest.TestCase):
 
 	def test_api_can_get_bucketlist_by_id(self):
 		"""Test API can get a single bucketlist by using it's id."""
-		postRes = self.client().post('/bucketlist/', data=self.bucketlist)
+		postRes = self.client().post('/bucketlists/', data=self.bucketlist)
 		self.assertEqual(postRes.status_code, 201)
-		insertedID = json.loads(postRes.data.devode('utf-8').replace("'", "\""))
+		
+		insertedID = json.loads(postRes.data.decode('utf-8').replace("'", "\""))['id']
 
 		res = self.client().get('/bucketlists/{}'.format(insertedID))
 		self.assertEqual(res.status_code, 200)
-		self.assertIn('Go to Alagoinhas', str(result.data))
+		self.assertIn('Go to Alagoinhas', str(res.data))
 
 
 	def test_bucketlist_can_be_edited(self):
@@ -58,8 +59,8 @@ class BucketlistTestCase(unittest.TestCase):
 		)
 		self.assertEqual(res.status_code, 200)
 
-		result = self.client().get('/bucketlist/1')
-		self.assertIn('!=', str(results.data))
+		result = self.client().get('/bucketlists/1')
+		self.assertIn('!=', str(result.data))
 
 
 	def test_bucketlist_deletion(self):
@@ -70,7 +71,7 @@ class BucketlistTestCase(unittest.TestCase):
 		res = self.client().delete('/bucketlists/1')
 		self.assertEqual(res.status_code, 200)
 
-		result = self.client().get('/bucketlist/1')
+		result = self.client().get('/bucketlists/1')
 		self.assertEqual(result.status_code, 404)
 
 
